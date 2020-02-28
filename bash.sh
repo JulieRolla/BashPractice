@@ -1,16 +1,23 @@
 #!/bin/bash  
 
+#### Things you should always do when coding:
+#### (1)Comment everything as thoroughly as possible
+#### (2)Every time you add a directory add the entire path - not just the path from where this file is currently located. That way if the file moves locations, it will still run without issue,
+#### since the whole path name is there. Ie "/fs/project/PAS0654/Coding_Practice/Moved_Files" versus writing "/Moved_Files"   
+#### (3)ALWAYS make sure your directories are made as variables. Ie. workingDir = /fs/project/PAS0654/Coding_Practice. This way later you can use $workingDir/Moved_Files for example. 
+#### This makes it MUCH easier for other users to pull a version off of gitHub since they will only have to edit the directory in one place instead of many!
+ 
 
-#### These are my variables
+#### These are my variables. The user should always check these before starting a run.
 num=3                # This is the variable used in calculate.py
 FileNum=10           # This is for the number of files I have to move. Since I only have 10 files, I can only move from 1-10 files.
 ScaleFactor=500      # This is the factor I am scaling my x axis in plot.py by. 
 Looping=2            # This is how many times I am going to loop this code.
 RunName='Wooo'       # This is to name the file after what "run" we have done. 
-
+workingDir=/fs/project/PAS0654/Coding_Practice      #This is the variable mentioned above in (3)
 
 #### Must make the RunName directory. If you put this in the loop, it would try to make it every time, and will give you an error.                                                                                                                                                  
-mkdir /fs/project/PAS0654/Coding_Practice/Runs/$RunName/
+mkdir $workingDir/Runs/$RunName/
 
 
 for gen in `seq 1 $Looping`
@@ -21,7 +28,7 @@ do
 for i in `seq 1 $FileNum`
 do
 
-    cp /fs/project/PAS0654/Coding_Practice/Files/${i}.txt /fs/project/PAS0654/Coding_Practice/Moved_Files/moved_${i}.txt
+    cp $workingDir/Files/${i}.txt $workingDir/Moved_Files/moved_${i}.txt
 
 done
 
@@ -37,7 +44,7 @@ echo '...'
 for i in `seq 1 $FileNum`
 do
 
-    rm -r /fs/project/PAS0654/Coding_Practice/Files/${i}.txt
+    rm -r $workingDir/Files/${i}.txt
 
 done 
 
@@ -52,7 +59,7 @@ echo '...'
 for i in `seq 1 $FileNum`                                                                                                                                                                 
 do                                                                                                                                                                                     
 
-    cp /fs/project/PAS0654/Coding_Practice/Moved_Files/moved_${i}.txt /fs/project/PAS0654/Coding_Practice/Files/${i}.txt                                                              
+    cp $workingDir/Moved_Files/moved_${i}.txt $workingDir/Files/${i}.txt                                                              
 done 
 
 #### This print the line to consul.
@@ -64,7 +71,7 @@ echo '...'
 
 #### This line runs calculate.py with the flag -- ie variable -- num from above. Note that we call the variable we declared above with a $ (but don't need the $
 #### when we declare the variable in the beginning, only when we call it later in the bash script). 
-python /fs/project/PAS0654/Coding_Practice/Array/calculate.py $num
+python $workingDir/Array/calculate.py $num
 
 #### I am using these to space out my outputs.
 echo '...'
@@ -84,7 +91,7 @@ echo '...'
 
 #### Similarly, if you went to run it again later & changed "ScaleFactor" at the top, it wouldn't replace it, since there is no "SCALE" string of text in Plot.py anymore.  
 
-sed -e "s/SCALE/$ScaleFactor/" /fs/project/PAS0654/Coding_Practice/Plot/Plot.py > /fs/project/PAS0654/Coding_Practice/Plot/New_Plot.py
+sed -e "s/SCALE/$ScaleFactor/" $workingDir/Plot/Plot.py > $workingDir/Plot/New_Plot.py
 
 echo '...'
 echo '...'
@@ -92,7 +99,7 @@ echo '...'
 echo '...'
 
 #### This line runs New_Plot.py
-python /fs/project/PAS0654/Coding_Practice/Plot/New_Plot.py
+python $workingDir/Plot/New_Plot.py
 
 echo '...'
 echo '...'
@@ -104,9 +111,9 @@ echo ${Looping} > $RunName.txt
 
 #### This moves the file created above before the next loop starts and renames it so it will not be deleted. However, if I run this again, it will overwrite these files
 #### if we do not change the $RunName.
-mv /fs/project/PAS0654/Coding_Practice/$RunName.txt /fs/project/PAS0654/Coding_Practice/Runs/$RunName/
+mv $workingDir/$RunName.txt $workingDir/Runs/$RunName/
 
 #### We are moving our plot so it is not overwritten. 
-mv /fs/project/PAS0654/Coding_Practice/test_plot1.png /fs/project/PAS0654/Coding_Practice/Runs/$RunName/
+mv $workingDir/test_plot1.png $workingDir/Runs/$RunName/
 
 done
